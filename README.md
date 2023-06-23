@@ -2,7 +2,6 @@
   <img style="width: 350px; height: auto;" src="strapi-emailing.png" alt="Logo - Strapi emailing plugin" />
 </div>
 <div align="center">
-  <h1>Strapi v4 - Emailing</h1>
   <p>A plugin for Strapi Headless CMS that provides end to end emailing feature with their moderation panel, usable for notifications, newsletter, custom email compose.</p>
 </div>
 
