@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Heading, Button, Table } from '@strapi/design-system';
+import { Box, Typography, Heading } from '@strapi/design-system';
 import axios from 'axios';
 
 interface Email {
@@ -32,36 +32,11 @@ const Homepage: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Heading variant="h1">Email Plugin Homepage</Heading>
-      
-      <Button onClick={handleSendEmailCampaign} variant="primary">
-        Send New Email Campaign
-      </Button>
-      
-      <Heading variant="h2">Sent Emails</Heading>
-      
-      <Table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Subject</th>
-            <th>Recipient</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {emails.map((email) => (
-            <tr key={email.id}>
-              <td>{email.id}</td>
-              <td>{email.subject}</td>
-              <td>{email.recipient}</td>
-              <td>{email.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Container>
+    <Box padding={4}>
+      <Box background="primary700" borderRaduis={10} padding={4}>
+         <Typography variant="alpha" textColor="neutral0">Bienvenue sur strapi emailing</Typography>
+      </Box>
+    </Box>
   );
 };
 
