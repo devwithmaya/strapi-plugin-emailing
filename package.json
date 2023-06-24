@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "description": "This is the description of the plugin.",
   "strapi": {
-    "name": "emailing",
-    "description": "Description of emailing plugin",
+    "name": "Emailing",
+    "description": "A plugin for Strapi Headless CMS that provides end to end emailing feature.",
     "kind": "plugin"
   },
   "dependencies": {
