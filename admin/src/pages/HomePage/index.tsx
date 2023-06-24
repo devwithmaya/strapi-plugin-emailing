@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Heading } from '@strapi/design-system';
-import axios from 'axios';
 
 interface Email {
   id: number;
@@ -17,12 +16,7 @@ const Homepage: React.FC = () => {
   }, []);
 
   const fetchEmails = async () => {
-    try {
-      const response = await axios.get('/api/emails'); // Replace with your Strapi API endpoint for fetching emails
-      setEmails(response.data);
-    } catch (error) {
-      console.error('Error fetching emails:', error);
-    }
+    //Fetch emails
   };
 
   const handleSendEmailCampaign = () => {
