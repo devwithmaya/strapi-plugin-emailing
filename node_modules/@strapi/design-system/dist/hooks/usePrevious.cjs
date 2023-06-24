@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const r=require("react"),u=t=>{const e=r.useRef();return r.useEffect(()=>{e.current=t}),e.current};exports.usePrevious=u;

@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const o=require("react/jsx-runtime"),t=require("../../Box/Box.cjs"),r=({children:e})=>o.jsx(t.Box,{position:"relative",children:e});exports.NavFooter=r;

@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});function t(e,r){return typeof e=="string"?!1:r in e}function i(e){return e&&typeof e=="object"&&!Array.isArray(e)}exports.isKeyOf=t;exports.isObject=i;

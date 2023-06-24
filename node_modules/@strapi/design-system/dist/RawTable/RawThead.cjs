@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const i=require("react/jsx-runtime"),r=require("react"),o=({children:t,...n})=>{const a=r.Children.toArray(t).map(e=>r.isValidElement(e)?r.cloneElement(e,{"aria-rowindex":1}):e);return i.jsx("thead",{...n,children:a})};exports.RawThead=o;

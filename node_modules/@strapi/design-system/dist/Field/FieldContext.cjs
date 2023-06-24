@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const e=require("react"),t=e.createContext({id:"",required:!1}),o=()=>e.useContext(t);exports.FieldContext=t;exports.useField=o;

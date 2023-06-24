@@ -1,1 +1,0 @@
-"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const e=require("./Main.cjs"),t=require("./SkipToContent.cjs");exports.Main=e.Main;exports.SkipToContent=t.SkipToContent;
