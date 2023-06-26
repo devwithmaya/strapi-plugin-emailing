@@ -196,6 +196,11 @@ const Homepage: React.FC = () => {
                 </AccordionContent>
               </Accordion>
             </Box>
+            <Box padding={8} background="neutral0">
+              <Box>
+                
+              </Box>
+            </Box>
           </Box>
         </ModalBody>
         <ModalFooter startActions={<Button onClick={() => setIsVisible(prev => !prev)} variant="tertiary">
