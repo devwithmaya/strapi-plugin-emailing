@@ -111,9 +111,13 @@ const Homepage: React.FC = () => {
         sendEmail(emailsList[i], template.template.subject, template.template.html)
           .then(res => {
             postEmailingTraces(emailsList[i], true)
+              .then(response => console.log(response))
+              .catch(error => console.error(error))
           })
           .catch(e => {
             postEmailingTraces(emailsList[i], false)
+              .then(response => console.log(response))
+              .catch(error => console.error(error))
           })
       }
     }
@@ -122,9 +126,13 @@ const Homepage: React.FC = () => {
         sendEmail(emailsList[i], subject, content)
           .then(res => {
             postEmailingTraces(emailsList[i], true)
+              .then(response => console.log(response))
+              .catch(error => console.error(error))
           })
           .catch(e => {
             postEmailingTraces(emailsList[i], false)
+              .then(response => console.log(response))
+              .catch(error => console.error(error))
           })
       }
     }
