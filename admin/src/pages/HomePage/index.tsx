@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, BaseHeaderLayout, Button, Table, Thead, Tbody, Tr, Th, Td, BaseCheckbox, Badge, ModalLayout, ModalHeader, ModalBody, ModalFooter, Accordion, AccordionToggle, TextInput, AccordionContent, Checkbox, Textarea } from '@strapi/design-system';
 import { Plus } from '@strapi/icons';
 import { getUsers } from '../../../../services/users';
+import { getEmailingTraces, postEmailingTraces } from '../../../../services/traces';
+import { sendEmail } from '../../../../services/email-sending';
 import { template_1 } from '../../../../services/templates/custom';
 
 type IsVisible = boolean;
@@ -17,7 +19,7 @@ type ComposedTemplate = any;
 
 const Homepage: React.FC = () => {
   const template: any = template_1;
-
+  const [emailingTraces, setEmailingTraces]: any = useState([])
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
   const [isReady, setIsReady] = useState<IsReady>(false);
   const [expanded, setExpanded] = useState<Expanded>(false)
@@ -46,15 +48,7 @@ const Homepage: React.FC = () => {
 
   useEffect(() => {
     fetchEmails();
-    for (let i = 0; i < 5; i++) {
-      setEntries([
-        ...entries,
-        {
-          ...entry,
-          id: i,
-        }
-      ])
-    }
+    fetchEmailingTraces();
   }, []);
 
   const optionHandler = (option: number) => {
@@ -67,22 +61,22 @@ const Homepage: React.FC = () => {
     if (option == 1) {
       setEmailsList(emails);
     }
-    else{
+    else {
       setEmailsList([]);
     }
   }
 
   const optionTemplateHandler = (option: number) => {
     setCurrentOptionTemplate(option)
-    if(option == 1){
+    if (option == 1) {
       setIsReady(true);
     }
-    else{
+    else {
       setIsReady(false);
     }
   }
 
-  const customTemplateHandler = () =>{
+  const customTemplateHandler = () => {
     setIsReady(true);
   }
 
@@ -99,11 +93,41 @@ const Homepage: React.FC = () => {
       .catch(e => console.log(e))
   };
 
+  const fetchEmailingTraces = async () => {
+    getEmailingTraces()
+      .then((res: any) => {
+        console.log(res)
+        setEmailingTraces(res)
+      })
+      .catch(e => console.log(e))
+  };
+
   const handleSendEmailCampaign = () => {
     // Logic to send a new email campaign goes here
     // You can use the Strapi API to create and send emails
     // Make sure to handle any necessary form inputs and validation
-    console.log('start sending emails')
+    if (currentOptionTemplate == 1) {
+      for (let i = 0; i < emailsList.length; i++) {
+        sendEmail(emailsList[i], template.template.subject, template.template.html)
+          .then(res => {
+            postEmailingTraces(emailsList[i], true)
+          })
+          .catch(e => {
+            postEmailingTraces(emailsList[i], false)
+          })
+      }
+    }
+    else {
+      for (let i = 0; i < emailsList.length; i++) {
+        sendEmail(emailsList[i], subject, content)
+          .then(res => {
+            postEmailingTraces(emailsList[i], true)
+          })
+          .catch(e => {
+            postEmailingTraces(emailsList[i], false)
+          })
+      }
+    }
   };
 
 
@@ -142,7 +166,7 @@ const Homepage: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {entries.map(entry => <Tr key={entry.id}>
+              {emailingTraces.map(entry => <Tr key={entry.id}>
                 <Td>
                   <BaseCheckbox aria-label={`Select ${entry.id}`} />
                 </Td>
@@ -150,13 +174,15 @@ const Homepage: React.FC = () => {
                   <Typography textColor="neutral800">{entry.id}</Typography>
                 </Td>
                 <Td>
-                  <Typography textColor="neutral800">{entry.email}</Typography>
+                  <Typography textColor="neutral800">{entry.attributes.email}</Typography>
                 </Td>
                 <Td>
-                  <Badge size="S" variant="success">{entry.statue}</Badge>
+                  <Box borderColor="red">
+                    <Badge size="S" variant="success">{entry.attributes.sent ? "Envoyé" : "Erreur"}</Badge>
+                  </Box>
                 </Td>
                 <Td>
-                  <Typography textColor="neutral800">{entry.date}</Typography>
+                  <Typography textColor="neutral800">{entry.attributes.createdAt}</Typography>
                 </Td>
               </Tr>)}
             </Tbody>
@@ -224,10 +250,10 @@ const Homepage: React.FC = () => {
                 <img src={template.screenshot} style={{ width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10, }} />
               </Box>
               <Box display={currentOptionTemplate == 2 ? '' : 'none'}>
-                <TextInput placeholder="Sujet du courriel" label="Sujet du l'e-mail" name="subject" hint="Composez un sujet pour votre e-mail" onChange={(e:any) => setSubject(e.target.value)} value={subject} size="M" />
+                <TextInput placeholder="Sujet du courriel" label="Sujet du l'e-mail" name="subject" hint="Composez un sujet pour votre e-mail" onChange={(e: any) => setSubject(e.target.value)} value={subject} size="M" />
                 <br />
                 <br />
-                <Textarea placeholder="Composez un contenu personnalisé pour votre email" label="Contenu de l'e-mail" name="email" hint="Vous pouvez mettre des balises html dans votre contenu"  onChange={(e:any) => setContent(e.target.value)} value={content}>
+                <Textarea placeholder="Composez un contenu personnalisé pour votre email" label="Contenu de l'e-mail" name="email" hint="Vous pouvez mettre des balises html dans votre contenu" onChange={(e: any) => setContent(e.target.value)} value={content}>
                 </Textarea>
                 <br />
                 <br />
@@ -239,7 +265,7 @@ const Homepage: React.FC = () => {
         <ModalFooter startActions={<Button onClick={() => setIsVisible(prev => !prev)} variant="tertiary">
           Cancel
         </Button>} endActions={<>
-          <Button disabled={currentStep == 1 ? true : false } variant="secondary" onClick={() => stepHandler(currentStep - 1)}>Étape précédente</Button>
+          <Button disabled={currentStep == 1 ? true : false} variant="secondary" onClick={() => stepHandler(currentStep - 1)}>Étape précédente</Button>
           <Button disabled={!nextStepActive} variant="secondary" onClick={() => stepHandler(currentStep + 1)}>L'étape suivante</Button>
           <Button disabled={!isReady} onClick={() => handleSendEmailCampaign()}>Envoyer maintenant</Button>
         </>} />
