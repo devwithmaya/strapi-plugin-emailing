@@ -8,6 +8,8 @@ import { template_1 } from '../../../../services/templates/custom';
 
 type IsVisible = boolean;
 type IsReady = boolean;
+type IsOnSending = boolean;
+type SendButton = string;
 type Expanded = boolean;
 type CurrentStep = number;
 type NextStepActive = boolean;
@@ -22,6 +24,8 @@ const Homepage: React.FC = () => {
   const [emailingTraces, setEmailingTraces]: any = useState([])
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
   const [isReady, setIsReady] = useState<IsReady>(false);
+  const [isOnSending, setIsOnSending] = useState<IsOnSending>(false);
+  const [sendButton, setSendButton] = useState<SendButton>('Envoyer maintenant')
   const [expanded, setExpanded] = useState<Expanded>(false)
   const [currentStep, setCurrentStep] = useState<CurrentStep>(1);
   const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
@@ -106,10 +110,13 @@ const Homepage: React.FC = () => {
     // Logic to send a new email campaign goes here
     // You can use the Strapi API to create and send emails
     // Make sure to handle any necessary form inputs and validation
+    setIsOnSending(true)
+    
     if (currentOptionTemplate == 1) {
       for (let i = 0; i < emailsList.length; i++) {
         sendEmail(emailsList[i], template.template.subject, template.template.html)
           .then(res => {
+            
             postEmailingTraces(emailsList[i], true)
               .then(response => console.log(response))
               .catch(error => console.error(error))
@@ -119,7 +126,15 @@ const Homepage: React.FC = () => {
               .then(response => console.log(response))
               .catch(error => console.error(error))
           })
+          if(i+1 >= emailsList.length){
+            setSendButton('Campagne envoyée')
+            setTimeout(function(){
+              window.location.reload()
+            }, 2000)
+          }
       }
+      
+      
     }
     else {
       for (let i = 0; i < emailsList.length; i++) {
@@ -134,6 +149,12 @@ const Homepage: React.FC = () => {
               .then(response => console.log(response))
               .catch(error => console.error(error))
           })
+          if(i+1 >= emailsList.length){
+            setSendButton('Campagne envoyée')
+            setTimeout(function(){
+              window.location.reload()
+            }, 2000)
+          }
       }
     }
   };
@@ -275,7 +296,7 @@ const Homepage: React.FC = () => {
         </Button>} endActions={<>
           <Button disabled={currentStep == 1 ? true : false} variant="secondary" onClick={() => stepHandler(currentStep - 1)}>Étape précédente</Button>
           <Button disabled={!nextStepActive} variant="secondary" onClick={() => stepHandler(currentStep + 1)}>L'étape suivante</Button>
-          <Button disabled={!isReady} onClick={() => handleSendEmailCampaign()}>Envoyer maintenant</Button>
+          <Button loading={isOnSending} disabled={!isReady} onClick={() => handleSendEmailCampaign()}>{sendButton}</Button>
         </>} />
       </ModalLayout>}
     </>
