@@ -21,6 +21,7 @@ const Homepage: React.FC = () => {
   const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
   const [currentOption, setCurrentOption] = useState<CurrentOption>(null);
   const [currentOptionSending, setCurrentOptionSending] = useState<CurrentOptionSending>(null);
+  const [currentOptionTemplate, setCurrentOptionTemplate] = useState<CurrentOptionSending>(null);
 
   const [emails, setEmails] = useState<Email[]>([]);
   const [emailsList, setEmailsList] = useState<Email[]>([]);
@@ -55,9 +56,13 @@ const Homepage: React.FC = () => {
 
   const optionSendingHandler = (option: number) => {
     setCurrentOptionSending(option)
-    if(option == 1){
+    if (option == 1) {
       setEmailsList(emails);
     }
+  }
+
+  const optionTemplateHandler = (option: number) => {
+    setCurrentOptionTemplate(option)
   }
 
   const stepHandler = (step: number) => {
@@ -66,8 +71,8 @@ const Homepage: React.FC = () => {
 
   const fetchEmails = async () => {
     getUsers()
-      .then((res:any) => {
-        const filtred_emails = res.map((item:any)=>item.email)
+      .then((res: any) => {
+        const filtred_emails = res.map((item: any) => item.email)
         setEmails(filtred_emails)
       })
       .catch(e => console.log(e))
@@ -163,9 +168,30 @@ const Homepage: React.FC = () => {
                 <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
                 <AccordionContent>
                   <Box padding={3}>
-                   {
-                    emails.map((item:any)=> <Typography><Checkbox onChange={()=>setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
-                   }
+                    {
+                      emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
+                    }
+                  </Box>
+                </AccordionContent>
+              </Accordion>
+            </Box>
+          </Box>
+          <Box display={currentStep !== 3 && "none"}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
+              <h1>Choisissez {currentOption == 1 ? "l'e-mail" : "notification"} qui sera envoyé</h1>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+              <Button variant={currentOptionTemplate == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(1)} >Modèle par défaut</Button>
+              <Button variant={currentOptionTemplate == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(2)} >Composer un modèle</Button>
+            </div>
+            <Box padding={8} background="neutral0">
+              <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
+                <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
+                <AccordionContent>
+                  <Box padding={3}>
+                    {
+                      emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={true}>{item}</Checkbox></Typography>)
+                    }
                   </Box>
                 </AccordionContent>
               </Accordion>
