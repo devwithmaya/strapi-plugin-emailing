@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, BaseHeaderLayout, Button, Table, Thead, Tbody, Tr, Th, Td, BaseCheckbox, Badge, ModalLayout, ModalHeader, ModalBody, ModalFooter, Accordion, AccordionToggle, IconButton, AccordionContent, Checkbox } from '@strapi/design-system';
 import { Plus } from '@strapi/icons';
 import { getUsers } from '../../../../services/users';
+import { criTemplate } from '../../../../services/templates/cri';
 
 type IsVisible = boolean;
 type Expanded = boolean;
@@ -198,7 +199,7 @@ const Homepage: React.FC = () => {
             </Box>
             <Box padding={8} background="neutral0">
               <Box>
-                
+
               </Box>
             </Box>
           </Box>
