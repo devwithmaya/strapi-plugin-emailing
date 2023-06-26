@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, BaseHeaderLayout, Button, Table, Thead, Tbody, Tr, Th, Td, BaseCheckbox, Badge, ModalLayout, ModalHeader, ModalBody, ModalFooter, Accordion, AccordionToggle, IconButton, AccordionContent, Checkbox } from '@strapi/design-system';
 import { Plus } from '@strapi/icons';
 import { getUsers } from '../../../../services/users';
-import { criTemplate } from '../../../../services/templates/cri';
+import { template_1 } from '../../../../services/templates/custom';
 
 type IsVisible = boolean;
 type Expanded = boolean;
@@ -16,6 +16,8 @@ type Email = any;
 type Entries = any;
 
 const Homepage: React.FC = () => {
+  const template:any = template_1;
+
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
   const [expanded, setExpanded] = useState<Expanded>(false)
   const [currentStep, setCurrentStep] = useState<CurrentStep>(1);
@@ -197,9 +199,9 @@ const Homepage: React.FC = () => {
                 </AccordionContent>
               </Accordion>
             </Box>
-            <Box padding={8} background="neutral0">
+            <Box padding={8} background="neutral100">
               <Box>
-
+                <img src={template.screenshot} style={{width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10,}} />
               </Box>
             </Box>
           </Box>
