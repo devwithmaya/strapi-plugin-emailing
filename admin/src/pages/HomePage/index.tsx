@@ -9,18 +9,10 @@ type CurrentStep = number;
 type NextStepActive = boolean;
 type CurrentOption = any;
 type CurrentOptionSending = any;
-type Email = {
-  id: number;
-  subject: string;
-  recipient: string;
-  status: string;
-}
-type Entries = {
-  id: Number,
-  email: String,
-  statue: String,
-  date: String,
-}
+
+type Email = any;
+
+type Entries = any;
 
 const Homepage: React.FC = () => {
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
@@ -31,6 +23,7 @@ const Homepage: React.FC = () => {
   const [currentOptionSending, setCurrentOptionSending] = useState<CurrentOptionSending>(null);
 
   const [emails, setEmails] = useState<Email[]>([]);
+  const [emailsList, setEmailsList] = useState<Email[]>([]);
 
   const [entries, setEntries] = useState<Entries[]>([]);
   const ROW_COUNT = 6;
@@ -62,6 +55,9 @@ const Homepage: React.FC = () => {
 
   const optionSendingHandler = (option: number) => {
     setCurrentOptionSending(option)
+    if(option == 1){
+      setEmailsList(emails);
+    }
   }
 
   const stepHandler = (step: number) => {
@@ -168,7 +164,7 @@ const Homepage: React.FC = () => {
                 <AccordionContent>
                   <Box padding={3}>
                    {
-                    emails.map((item:any)=> <Typography><Checkbox indeterminate={true} disabled={true}>{item}</Checkbox></Typography>)
+                    emails.map((item:any)=> <Typography><Checkbox onChange={()=>setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
                    }
                   </Box>
                 </AccordionContent>
