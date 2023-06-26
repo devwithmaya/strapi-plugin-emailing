@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, BaseHeaderLayout, Button, Table, Thead, Tbody, Tr, Th, Td, BaseCheckbox, Badge, ModalLayout, ModalHeader, ModalBody, ModalFooter, Accordion, AccordionToggle, IconButton, AccordionContent, Checkbox } from '@strapi/design-system';
+import { Box, Typography, BaseHeaderLayout, Button, Table, Thead, Tbody, Tr, Th, Td, BaseCheckbox, Badge, ModalLayout, ModalHeader, ModalBody, ModalFooter, Accordion, AccordionToggle, TextInput, AccordionContent, Checkbox, Textarea } from '@strapi/design-system';
 import { Plus } from '@strapi/icons';
 import { getUsers } from '../../../../services/users';
 import { template_1 } from '../../../../services/templates/custom';
 
 type IsVisible = boolean;
+type IsReady = boolean;
 type Expanded = boolean;
 type CurrentStep = number;
 type NextStepActive = boolean;
 type CurrentOption = any;
 type CurrentOptionSending = any;
-
 type Email = any;
-
 type Entries = any;
+type ComposedTemplate = any;
 
 const Homepage: React.FC = () => {
-  const template:any = template_1;
+  const template: any = template_1;
 
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
+  const [isReady, setIsReady] = useState<IsReady>(false);
   const [expanded, setExpanded] = useState<Expanded>(false)
   const [currentStep, setCurrentStep] = useState<CurrentStep>(1);
   const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
@@ -28,6 +29,10 @@ const Homepage: React.FC = () => {
 
   const [emails, setEmails] = useState<Email[]>([]);
   const [emailsList, setEmailsList] = useState<Email[]>([]);
+
+  const [subject, setSubject] = useState('');
+  const [content, setContent] = useState('');
+  const [composedTemplate, setComposedTemplate] = useState<ComposedTemplate>({})
 
   const [entries, setEntries] = useState<Entries[]>([]);
   const ROW_COUNT = 6;
@@ -62,10 +67,23 @@ const Homepage: React.FC = () => {
     if (option == 1) {
       setEmailsList(emails);
     }
+    else{
+      setEmailsList([]);
+    }
   }
 
   const optionTemplateHandler = (option: number) => {
     setCurrentOptionTemplate(option)
+    if(option == 1){
+      setIsReady(true);
+    }
+    else{
+      setIsReady(false);
+    }
+  }
+
+  const customTemplateHandler = () =>{
+    setIsReady(true);
   }
 
   const stepHandler = (step: number) => {
@@ -85,6 +103,7 @@ const Homepage: React.FC = () => {
     // Logic to send a new email campaign goes here
     // You can use the Strapi API to create and send emails
     // Make sure to handle any necessary form inputs and validation
+    console.log('start sending emails')
   };
 
 
@@ -151,11 +170,10 @@ const Homepage: React.FC = () => {
         <ModalBody>
           <Box display={currentStep !== 1 && "none"}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
-              <h1>Choisissez ce que vous voulez faire dans cette campagne</h1>
+              <Typography as="h1">Vous pouvez envoyer des e-mails et des notifications à vos utilisateurs</Typography>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-              <Button variant={currentOption == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(1)} >Nouvelles e-mails</Button>
-              <Button variant={currentOption == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(2)} >Nouvelles notifications</Button>
+              <Button variant={currentOption == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(1)} >Démarrer une nouvelle campagne</Button>
             </div>
           </Box>
           <Box display={currentStep !== 2 && "none"}>
@@ -185,23 +203,35 @@ const Homepage: React.FC = () => {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
               <Button variant={currentOptionTemplate == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(1)} >Modèle par défaut</Button>
-              <Button variant={currentOptionTemplate == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(2)} >Composer un modèle</Button>
+              <Button variant={currentOptionTemplate == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(2)} >Composer nouveau</Button>
             </div>
-            <Box padding={8} background="neutral0">
+            <br></br>
+            <Box background="neutral0">
               <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
-                <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
+                <AccordionToggle togglePosition="left" title="Liste des emails des destinataires" />
                 <AccordionContent>
                   <Box padding={3}>
                     {
-                      emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={true}>{item}</Checkbox></Typography>)
+                      emailsList.map((item: any) => <Typography><Checkbox indeterminate={true} disabled={true}>{item}</Checkbox></Typography>)
                     }
                   </Box>
                 </AccordionContent>
               </Accordion>
             </Box>
+            <br></br>
             <Box padding={8} background="neutral100">
-              <Box>
-                <img src={template.screenshot} style={{width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10,}} />
+              <Box display={currentOptionTemplate == 1 ? '' : 'none'}>
+                <img src={template.screenshot} style={{ width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10, }} />
+              </Box>
+              <Box display={currentOptionTemplate == 2 ? '' : 'none'}>
+                <TextInput placeholder="Sujet du courriel" label="Sujet du l'e-mail" name="subject" hint="Composez un sujet pour votre e-mail" onChange={(e:any) => setSubject(e.target.value)} value={subject} size="M" />
+                <br />
+                <br />
+                <Textarea placeholder="Composez un contenu personnalisé pour votre email" label="Contenu de l'e-mail" name="email" hint="Vous pouvez mettre des balises html dans votre contenu"  onChange={(e:any) => setContent(e.target.value)} value={content}>
+                </Textarea>
+                <br />
+                <br />
+                <Button size="s" onClick={() => customTemplateHandler()} >Sauvegarder</Button>
               </Box>
             </Box>
           </Box>
@@ -209,8 +239,9 @@ const Homepage: React.FC = () => {
         <ModalFooter startActions={<Button onClick={() => setIsVisible(prev => !prev)} variant="tertiary">
           Cancel
         </Button>} endActions={<>
+          <Button disabled={currentStep == 1 ? true : false } variant="secondary" onClick={() => stepHandler(currentStep - 1)}>Étape précédente</Button>
           <Button disabled={!nextStepActive} variant="secondary" onClick={() => stepHandler(currentStep + 1)}>L'étape suivante</Button>
-          <Button disabled onClick={() => setIsVisible(prev => !prev)}>Envoyer maintenant</Button>
+          <Button disabled={!isReady} onClick={() => handleSendEmailCampaign()}>Envoyer maintenant</Button>
         </>} />
       </ModalLayout>}
     </>
