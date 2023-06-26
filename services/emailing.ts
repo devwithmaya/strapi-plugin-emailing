@@ -1,0 +1,5 @@
+/**
+ * emailing service
+ */
+
+export default () => ({});
