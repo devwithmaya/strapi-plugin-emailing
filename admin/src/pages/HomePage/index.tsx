@@ -31,6 +31,7 @@ const Homepage: React.FC = () => {
   const [currentOptionSending, setCurrentOptionSending] = useState<CurrentOptionSending>(null);
 
   const [emails, setEmails] = useState<Email[]>([]);
+
   const [entries, setEntries] = useState<Entries[]>([]);
   const ROW_COUNT = 6;
   const COL_COUNT = 10;
@@ -69,7 +70,10 @@ const Homepage: React.FC = () => {
 
   const fetchEmails = async () => {
     getUsers()
-      .then(res => console.log(res))
+      .then((res:any) => {
+        const filtred_emails = res.map((item:any)=>item.email)
+        setEmails(filtred_emails)
+      })
       .catch(e => console.log(e))
   };
 
@@ -163,7 +167,9 @@ const Homepage: React.FC = () => {
                 <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
                 <AccordionContent>
                   <Box padding={3}>
-                    <Typography><Checkbox indeterminate={false}>Parent</Checkbox></Typography>
+                   {
+                    emails.map((item:any)=> <Typography><Checkbox indeterminate={true} disabled={true}>{item}</Checkbox></Typography>)
+                   }
                   </Box>
                 </AccordionContent>
               </Accordion>
