@@ -249,10 +249,81 @@ const Homepage: React.FC = () => {
           </Box>
           <Box display={currentStep !== 2 && "none"}>
             <Box display={compaignOption !== "emailing" && "none"}>
-              <h1>start on emailing</h1>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
+                <h1>Choisissez ce que vous voulez envoyer pour cela</h1>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+                <Button variant={currentOptionSending == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(1)} >Tous les utilisateurs</Button>
+                <Button variant={currentOptionSending == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(2)} >Utilisateurs spécifiques</Button>
+              </div>
+              <Box padding={8} background="neutral0">
+                <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
+                  <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
+                  <AccordionContent>
+                    <Box padding={3}>
+                      {
+                        emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
+                      }
+                    </Box>
+                  </AccordionContent>
+                </Accordion>
+              </Box>
             </Box>
             <Box display={compaignOption !== "newsletter" && "none"}>
-              <h1>Start on newsletter</h1>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
+                <h1>Choisissez ce que vous voulez envoyer pour cela</h1>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+                <Button variant={currentOptionSending == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(1)} >Tous les utilisateurs</Button>
+                <Button variant={currentOptionSending == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(2)} >Utilisateurs spécifiques</Button>
+              </div>
+              <Box padding={8} background="neutral0">
+                <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
+                  <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
+                  <AccordionContent>
+                    <Box padding={3}>
+                      {
+                        emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
+                      }
+                    </Box>
+                  </AccordionContent>
+                </Accordion>
+              </Box>
+            </Box>
+          </Box>
+          <Box display={currentStep !== 3 && "none"}>
+            <Box display={compaignOption !== "emailing" && "none"}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
+                <h1>Choisissez le modèle que vous souhaitez envoyer</h1>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+                <Button variant={currentOptionTemplate == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(1)} >Modèle par défaut</Button>
+                <Button variant={currentOptionTemplate == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(2)} >Composer nouveau</Button>
+              </div>
+              <br/>
+              <Box padding={8} background="neutral100">
+                <Box display={currentOptionTemplate == 1 || currentOptionTemplate == 2 ? "none" : null}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+                    <p style={{opacity: 0.2, fontSize: 13}}>Veuillez choisir un modèle!</p>
+                  </div>
+                </Box>
+                <Box display={currentOptionTemplate == 1 ? '' : 'none'}>
+                  <img src={template.screenshot} style={{ width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10, }} />
+                </Box>
+                <Box display={currentOptionTemplate == 2 ? '' : 'none'}>
+                  <TextInput placeholder="Sujet du courriel" label="Sujet du l'e-mail" name="subject" hint="Composez un sujet pour votre e-mail" onChange={(e: any) => setSubject(e.target.value)} value={subject} size="M" />
+                  <br />
+                  <br />
+                  <Textarea placeholder="Composez un contenu personnalisé pour votre email" label="Contenu de l'e-mail" name="email" hint="Vous pouvez mettre des balises html dans votre contenu" onChange={(e: any) => setContent(e.target.value)} value={content}>
+                  </Textarea>
+                  <br />
+                  <br />
+                  <Button size="s" onClick={() => customTemplateHandler()} >Sauvegarder</Button>
+                </Box>
+              </Box>
+            </Box>
+            <Box display={compaignOption !== "newsletter" && "none"}>
+              <h1>Choose template for newsletter</h1>
             </Box>
           </Box>
 
