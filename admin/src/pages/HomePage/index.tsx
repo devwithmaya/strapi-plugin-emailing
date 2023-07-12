@@ -9,6 +9,7 @@ import { template_1 } from '../../../../services/templates/custom';
 
 type IsVisible = boolean;
 type IsReady = boolean;
+type EmailingPlugin = number;
 type IsOnSending = boolean;
 type SendButton = string;
 type Expanded = boolean;
@@ -152,6 +153,14 @@ const Homepage: React.FC = () => {
       }
     }
   };
+
+  const emailingPlugin = (variable:number) =>{
+    console.log(variable)
+  }
+  const close = () =>{
+    setIsVisible(prev => !prev)
+    window.location.reload()
+  }
 
   return (
     <>
@@ -298,7 +307,7 @@ const Homepage: React.FC = () => {
             </Box>
           </Box>
         </ModalBody>
-        <ModalFooter startActions={<Button onClick={() => setIsVisible(prev => !prev)} variant="tertiary">
+        <ModalFooter startActions={<Button onClick={() => close()} variant="tertiary">
           Cancel
         </Button>} endActions={<>
           <Button disabled={currentStep == 1 ? true : false} variant="secondary" onClick={() => stepHandler(currentStep - 1)}>Étape précédente</Button>
