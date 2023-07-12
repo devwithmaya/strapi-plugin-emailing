@@ -104,12 +104,62 @@ const Homepage: React.FC = () => {
       .catch(e => console.error(e))
   };
 
+
+
+  // new alghorithm
+  const close = () =>{
+    setIsVisible(prev => !prev)
+    window.location.reload()
+  }
+  const emailingHandler = () =>{
+    setCompaignOption("emailing")
+    setNextStepActive(true)
+  }
+
+
+  const newsletterHandler = () =>{
+    setCompaignOption("newsletter")
+    setNextStepActive(true)
+  }
+
+  const compaignHandler = (compaignOption:string) =>{
+    switch (compaignOption){
+      case "emailing":
+        emailingHandler();
+        break;
+      case "newsletter":
+        newsletterHandler()
+        break;
+      default:
+        break;
+    }
+  }
+  const emailingSending = () =>{
+    setIsOnSending(true)
+    console.log("start sending emailing")
+  }
+  const newsletterSending = () =>{
+    setIsOnSending(true)
+    console.log("Start sending newsletter")
+  }
+
   const handleSendEmailCampaign = () => {
     // Logic to send a new email campaign goes here
     // You can use the Strapi API to create and send emails
     // Make sure to handle any necessary form inputs and validation
     setIsOnSending(true)
+    switch(compaignOption){
+      case "emailing":
+        emailingSending();
+        break;
+      case "newsletter":
+        newsletterSending();
+        break;
+      default:
+        break;
+    }
 
+    /*
     if (currentOptionTemplate == 1) {
       for (let i = 0; i < emailsList.length; i++) {
         sendEmail(emailsList[i], template.template.subject, template.template.html)
@@ -124,15 +174,13 @@ const Homepage: React.FC = () => {
               .then(response => null)
               .catch(error => console.error(error))
           })
-          if(i+1 >= emailsList.length){
-            setSendButton('Campagne envoyée')
-            setTimeout(function(){
-              window.location.reload()
-            }, 2000)
-          }
+        if(i+1 >= emailsList.length){
+          setSendButton('Campagne envoyée')
+          setTimeout(function(){
+            window.location.reload()
+          }, 2000)
+        }
       }
-
-
     }
     else {
       for (let i = 0; i < emailsList.length; i++) {
@@ -147,41 +195,17 @@ const Homepage: React.FC = () => {
               .then(response => null)
               .catch(error => console.error(error))
           })
-          if(i+1 >= emailsList.length){
-            setSendButton('Campagne envoyée')
-            setTimeout(function(){
-              window.location.reload()
-            }, 2000)
-          }
+        if(i+1 >= emailsList.length){
+          setSendButton('Campagne envoyée')
+          setTimeout(function(){
+            window.location.reload()
+          }, 2000)
+        }
       }
     }
+     */
   };
 
-  // new alghorithm
-  const emailingHandler = () =>{
-    setCompaignOption("emailing")
-    setNextStepActive(true)
-  }
-  const newsletterHandler = () =>{
-    setCompaignOption("newsletter")
-    setNextStepActive(true)
-  }
-  const compaignHandler = (compaignOption:string) =>{
-    switch (compaignOption){
-      case "emailing":
-        emailingHandler();
-        break;
-      case "newsletter":
-        newsletterHandler()
-        break;
-      default:
-        break;
-    }
-  }
-  const close = () =>{
-    setIsVisible(prev => !prev)
-    window.location.reload()
-  }
 
   return (
     <>
@@ -326,78 +350,6 @@ const Homepage: React.FC = () => {
               <h1>Choose template for newsletter</h1>
             </Box>
           </Box>
-
-          {
-            /*
-            <Box display={currentStep !== 2 && "none"}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
-              <h1>Choisissez ce que vous voulez envoyer pour cela</h1>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-              <Button variant={currentOptionSending == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(1)} >Tous les utilisateurs</Button>
-              <Button variant={currentOptionSending == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(2)} >Utilisateurs spécifiques</Button>
-            </div>
-            <Box padding={8} background="neutral0">
-              <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
-                <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
-                <AccordionContent>
-                  <Box padding={3}>
-                    {
-                      emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
-                    }
-                  </Box>
-                </AccordionContent>
-              </Accordion>
-            </Box>
-          </Box>
-          <Box display={currentStep !== 5 && "none"}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
-              <h1>Choisissez ce que vous voulez envoyer pour cela</h1>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-              <Button variant={currentOptionSending == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(1)} >Tous les utilisateurs</Button>
-              <Button variant={currentOptionSending == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionSendingHandler(2)} >Utilisateurs spécifiques</Button>
-            </div>
-            <Box padding={8} background="neutral0">
-              <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
-                <AccordionToggle togglePosition="left" title="E-mails de tous les utilisateurs" />
-                <AccordionContent>
-                  <Box padding={3}>
-                    {
-                      emails.map((item: any) => <Typography><Checkbox onChange={() => setEmailsList([...emailsList, item])} indeterminate={emailsList.indexOf(item) == -1 ? false : true} disabled={currentOptionSending == 1 ? true : false}>{item}</Checkbox></Typography>)
-                    }
-                  </Box>
-                </AccordionContent>
-              </Accordion>
-            </Box>
-          </Box>
-          <Box display={currentStep !== 3 && "none"}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
-              <h1>Choisissez {currentOption == 1 ? "l'e-mail" : "notification"} qui sera envoyé</h1>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-              <Button variant={currentOptionTemplate == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(1)} >Modèle par défaut</Button>
-              <Button variant={currentOptionTemplate == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(2)} >Composer nouveau</Button>
-            </div>
-            <br></br>
-            <Box padding={8} background="neutral100">
-              <Box display={currentOptionTemplate == 1 ? '' : 'none'}>
-                <img src={template.screenshot} style={{ width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10, }} />
-              </Box>
-              <Box display={currentOptionTemplate == 2 ? '' : 'none'}>
-                <TextInput placeholder="Sujet du courriel" label="Sujet du l'e-mail" name="subject" hint="Composez un sujet pour votre e-mail" onChange={(e: any) => setSubject(e.target.value)} value={subject} size="M" />
-                <br />
-                <br />
-                <Textarea placeholder="Composez un contenu personnalisé pour votre email" label="Contenu de l'e-mail" name="email" hint="Vous pouvez mettre des balises html dans votre contenu" onChange={(e: any) => setContent(e.target.value)} value={content}>
-                </Textarea>
-                <br />
-                <br />
-                <Button size="s" onClick={() => customTemplateHandler()} >Sauvegarder</Button>
-              </Box>
-            </Box>
-          </Box>
-            */
-          }
         </ModalBody>
         <ModalFooter startActions={<Button onClick={() => close()} variant="tertiary">
           Cancel
