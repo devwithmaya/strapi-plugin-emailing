@@ -25,6 +25,10 @@ const Homepage: React.FC = () => {
   const template: any = template_1;
   const [emailingTraces, setEmailingTraces]: any = useState([])
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
+
+  const [compaignOption, setCompaignOption] = useState(null);
+
+
   const [isReady, setIsReady] = useState<IsReady>(false);
   const [isOnSending, setIsOnSending] = useState<IsOnSending>(false);
   const [sendButton, setSendButton] = useState<SendButton>('Envoyer maintenant')
@@ -89,16 +93,15 @@ const Homepage: React.FC = () => {
         const filtred_emails = res.map((item: any) => item.email)
         setEmails(filtred_emails)
       })
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
   };
 
   const fetchEmailingTraces = async () => {
     getEmailingTraces()
       .then((res: any) => {
-        console.log(res)
         setEmailingTraces(res)
       })
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
   };
 
   const handleSendEmailCampaign = () => {
@@ -113,12 +116,12 @@ const Homepage: React.FC = () => {
           .then(res => {
 
             postEmailingTraces(emailsList[i], true)
-              .then(response => console.log(response))
+              .then(response => null)
               .catch(error => console.error(error))
           })
           .catch(e => {
             postEmailingTraces(emailsList[i], false)
-              .then(response => console.log(response))
+              .then(response => null)
               .catch(error => console.error(error))
           })
           if(i+1 >= emailsList.length){
@@ -136,12 +139,12 @@ const Homepage: React.FC = () => {
         sendEmail(emailsList[i], subject, content)
           .then(res => {
             postEmailingTraces(emailsList[i], true)
-              .then(response => console.log(response))
+              .then(response => null)
               .catch(error => console.error(error))
           })
           .catch(e => {
             postEmailingTraces(emailsList[i], false)
-              .then(response => console.log(response))
+              .then(response => null)
               .catch(error => console.error(error))
           })
           if(i+1 >= emailsList.length){
@@ -154,8 +157,24 @@ const Homepage: React.FC = () => {
     }
   };
 
-  const emailingPlugin = (variable:number) =>{
-    console.log(variable)
+  // new alghorithm
+  const emailingHandler = () =>{
+    setCompaignOption("emailing")
+  }
+  const newsletterHandler = () =>{
+    setCompaignOption("newsletter")
+  }
+  const compaignHandler = (compaignOption:string) =>{
+    switch (compaignOption){
+      case "emailing":
+        emailingHandler();
+        break;
+      case "newsletter":
+        newsletterHandler()
+        break;
+      default:
+        break;
+    }
   }
   const close = () =>{
     setIsVisible(prev => !prev)
@@ -212,7 +231,7 @@ const Homepage: React.FC = () => {
           </Table>
         </Box>
       </Box>
-      {isVisible && <ModalLayout onClose={() => setIsVisible(prev => !prev)} labelledBy="title">
+      {isVisible && <ModalLayout onClose={() => close()} labelledBy="title">
         <ModalHeader>
           <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title"> Créer une nouvelle campagne </Typography>
         </ModalHeader>
@@ -222,11 +241,13 @@ const Homepage: React.FC = () => {
               <Typography as="h1">Vous pouvez envoyer des e-mails et des notifications à vos utilisateurs</Typography>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-              <Button variant={currentOption == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(1)} >Campagne d'emailing</Button>
-              <Button variant={currentOption == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(2)} >Campagne de newsletter</Button>
+              <Button variant={compaignOption == "emailing" ? 'primary' : 'secondary'} size="L" onClick={() => compaignHandler("emailing")} >Campagne d'emailing</Button>
+              <Button variant={compaignOption == "newsletter" ? 'primary' : 'secondary'} size="L" onClick={() => compaignHandler("newsletter")} >Campagne de newsletter</Button>
             </div>
           </Box>
-          <Box display={currentStep !== 2 && "none"}>
+          {
+            /*
+            <Box display={currentStep !== 2 && "none"}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20, }}>
               <h1>Choisissez ce que vous voulez envoyer pour cela</h1>
             </div>
@@ -277,19 +298,6 @@ const Homepage: React.FC = () => {
               <Button variant={currentOptionTemplate == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionTemplateHandler(2)} >Composer nouveau</Button>
             </div>
             <br></br>
-            <Box background="neutral0">
-              <Accordion expanded={expanded} onToggle={() => setExpanded(s => !s)} id="acc-4" variant="secondary">
-                <AccordionToggle togglePosition="left" title="Liste des emails des destinataires" />
-                <AccordionContent>
-                  <Box padding={3}>
-                    {
-                      emailsList.map((item: any) => <Typography><Checkbox indeterminate={true} disabled={true}>{item}</Checkbox></Typography>)
-                    }
-                  </Box>
-                </AccordionContent>
-              </Accordion>
-            </Box>
-            <br></br>
             <Box padding={8} background="neutral100">
               <Box display={currentOptionTemplate == 1 ? '' : 'none'}>
                 <img src={template.screenshot} style={{ width: 650, height: 450, objectFit: 'cover', borderColor: "black", borderWidth: 3, borderRadius: 10, }} />
@@ -306,6 +314,8 @@ const Homepage: React.FC = () => {
               </Box>
             </Box>
           </Box>
+            */
+          }
         </ModalBody>
         <ModalFooter startActions={<Button onClick={() => close()} variant="tertiary">
           Cancel
