@@ -160,11 +160,11 @@ const Homepage: React.FC = () => {
   // new alghorithm
   const emailingHandler = () =>{
     setCompaignOption("emailing")
-    setNextStepActive(prev=>!prev)
+    setNextStepActive(true)
   }
   const newsletterHandler = () =>{
     setCompaignOption("newsletter")
-    setNextStepActive(prev=>!prev)
+    setNextStepActive(true)
   }
   const compaignHandler = (compaignOption:string) =>{
     switch (compaignOption){
