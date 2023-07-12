@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, BaseHeaderLayout, Button, Table, Thead, Tbody, Tr, Th, Td, BaseCheckbox, Badge, ModalLayout, ModalHeader, ModalBody, ModalFooter, Accordion, AccordionToggle, TextInput, AccordionContent, Checkbox, Textarea } from '@strapi/design-system';
 import { Plus } from '@strapi/icons';
@@ -40,15 +41,8 @@ const Homepage: React.FC = () => {
   const [content, setContent] = useState('');
   const [composedTemplate, setComposedTemplate] = useState<ComposedTemplate>({})
 
-  const [entries, setEntries] = useState<Entries[]>([]);
   const ROW_COUNT = 6;
   const COL_COUNT = 10;
-  const entry = {
-    email: 'o.nejdi@mayagroup.ma',
-    statue: 'done',
-    date: '01/13/2023 05:16:47 PM'
-  };
-
 
   useEffect(() => {
     fetchEmails();
@@ -111,12 +105,12 @@ const Homepage: React.FC = () => {
     // You can use the Strapi API to create and send emails
     // Make sure to handle any necessary form inputs and validation
     setIsOnSending(true)
-    
+
     if (currentOptionTemplate == 1) {
       for (let i = 0; i < emailsList.length; i++) {
         sendEmail(emailsList[i], template.template.subject, template.template.html)
           .then(res => {
-            
+
             postEmailingTraces(emailsList[i], true)
               .then(response => console.log(response))
               .catch(error => console.error(error))
@@ -133,8 +127,8 @@ const Homepage: React.FC = () => {
             }, 2000)
           }
       }
-      
-      
+
+
     }
     else {
       for (let i = 0; i < emailsList.length; i++) {
@@ -158,9 +152,6 @@ const Homepage: React.FC = () => {
       }
     }
   };
-
-
-
 
   return (
     <>
@@ -228,7 +219,8 @@ const Homepage: React.FC = () => {
               <Typography as="h1">Vous pouvez envoyer des e-mails et des notifications à vos utilisateurs</Typography>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-              <Button variant={currentOption == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(1)} >Démarrer une nouvelle campagne</Button>
+              <Button variant={currentOption == 1 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(1)} >Campagne d'emailing</Button>
+              <Button variant={currentOption == 2 ? 'primary' : 'secondary'} size="L" onClick={() => optionHandler(2)} >Campagne de newsletter</Button>
             </div>
           </Box>
           <Box display={currentStep !== 2 && "none"}>
