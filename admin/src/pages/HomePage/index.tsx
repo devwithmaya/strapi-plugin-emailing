@@ -27,6 +27,7 @@ const Homepage: React.FC = () => {
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
 
   const [compaignOption, setCompaignOption] = useState(null);
+  const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
 
 
   const [isReady, setIsReady] = useState<IsReady>(false);
@@ -34,7 +35,6 @@ const Homepage: React.FC = () => {
   const [sendButton, setSendButton] = useState<SendButton>('Envoyer maintenant')
   const [expanded, setExpanded] = useState<Expanded>(false)
   const [currentStep, setCurrentStep] = useState<CurrentStep>(1);
-  const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
   const [currentOption, setCurrentOption] = useState<CurrentOption>(null);
   const [currentOptionSending, setCurrentOptionSending] = useState<CurrentOptionSending>(null);
   const [currentOptionTemplate, setCurrentOptionTemplate] = useState<CurrentOptionSending>(null);
@@ -160,9 +160,11 @@ const Homepage: React.FC = () => {
   // new alghorithm
   const emailingHandler = () =>{
     setCompaignOption("emailing")
+    setNextStepActive(prev=>!prev)
   }
   const newsletterHandler = () =>{
     setCompaignOption("newsletter")
+    setNextStepActive(prev=>!prev)
   }
   const compaignHandler = (compaignOption:string) =>{
     switch (compaignOption){
@@ -245,6 +247,15 @@ const Homepage: React.FC = () => {
               <Button variant={compaignOption == "newsletter" ? 'primary' : 'secondary'} size="L" onClick={() => compaignHandler("newsletter")} >Campagne de newsletter</Button>
             </div>
           </Box>
+          <Box display={currentStep !== 2 && "none"}>
+            <Box display={compaignOption !== "emailing" && "none"}>
+              <h1>start on emailing</h1>
+            </Box>
+            <Box display={compaignOption !== "newsletter" && "none"}>
+              <h1>Start on newsletter</h1>
+            </Box>
+          </Box>
+
           {
             /*
             <Box display={currentStep !== 2 && "none"}>
