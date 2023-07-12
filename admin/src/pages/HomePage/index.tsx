@@ -6,8 +6,9 @@ import { getUsers } from '../../../../services/users';
 import { getEmailingTraces, postEmailingTraces } from '../../../../services/traces';
 import { sendEmail } from '../../../../services/email-sending';
 import { template_1 } from '../../../../services/templates/custom';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import MDEditor from '@uiw/react-md-editor';
+
+
 
 type IsVisible = boolean;
 type IsReady = boolean;
@@ -31,6 +32,7 @@ const Homepage: React.FC = () => {
   const [compaignOption, setCompaignOption] = useState(null);
   const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
   const [newsletterLink, setNewsletterLink] = useState('')
+  const [value, setValue] = React.useState("**Hello world!!!**");
 
   const [isReady, setIsReady] = useState<IsReady>(false);
   const [isOnSending, setIsOnSending] = useState<IsOnSending>(false);
@@ -56,6 +58,9 @@ const Homepage: React.FC = () => {
     fetchEmailingTraces();
   }, []);
 
+  const textHandler = (value:any) =>{
+    console.log(value)
+  }
   const optionSendingHandler = (option: number) => {
     setCurrentOptionSending(option)
     if (option == 1) {
@@ -101,7 +106,6 @@ const Homepage: React.FC = () => {
       .catch(e => console.error(e))
   };
 
-  const EditorComponent = () => <Editor />
   const close = () =>{
     setIsVisible(prev => !prev)
     window.location.reload()
@@ -407,54 +411,7 @@ const Homepage: React.FC = () => {
         newsletterSending();
         break;
     }
-
-    /*
-    if (currentOptionTemplate == 1) {
-      for (let i = 0; i < emailsList.length; i++) {
-        sendEmail(emailsList[i], template.template.subject, template.template.html)
-          .then(res => {
-
-            postEmailingTraces(emailsList[i], true)
-              .then(response => null)
-              .catch(error => console.error(error))
-          })
-          .catch(e => {
-            postEmailingTraces(emailsList[i], false)
-              .then(response => null)
-              .catch(error => console.error(error))
-          })
-        if(i+1 >= emailsList.length){
-          setSendButton('Campagne envoyée')
-          setTimeout(function(){
-            window.location.reload()
-          }, 2000)
-        }
-      }
-    }
-    else {
-      for (let i = 0; i < emailsList.length; i++) {
-        sendEmail(emailsList[i], subject, content)
-          .then(res => {
-            postEmailingTraces(emailsList[i], true)
-              .then(response => null)
-              .catch(error => console.error(error))
-          })
-          .catch(e => {
-            postEmailingTraces(emailsList[i], false)
-              .then(response => null)
-              .catch(error => console.error(error))
-          })
-        if(i+1 >= emailsList.length){
-          setSendButton('Campagne envoyée')
-          setTimeout(function(){
-            window.location.reload()
-          }, 2000)
-        }
-      }
-    }
-     */
   };
-
 
   return (
     <>
@@ -587,8 +544,14 @@ const Homepage: React.FC = () => {
                   <TextInput placeholder="Sujet du courriel" label="Sujet du l'e-mail" name="subject" hint="Composez un sujet pour votre e-mail" onChange={(e: any) => setSubject(e.target.value)} value={subject} size="M" />
                   <br />
                   <br />
-                  <Textarea placeholder="Composez un contenu personnalisé pour votre email" label="Contenu de l'e-mail" name="email" hint="Vous pouvez mettre des balises html dans votre contenu" onChange={(e: any) => setContent(e.target.value)} value={content}>
-                  </Textarea>
+                  <p>Contenu de l'e-mail</p>
+                  <br />
+                  <MDEditor
+                    value={value}
+                    onChange={setValue}
+                    preview="edit"
+                  />
+                  <MDEditor.Markdown source={value} style={{ whiteSpace: 'pre-wrap' }} />
                   <br />
                   <br />
                   <Button size="s" onClick={() => customTemplateHandler()} >Sauvegarder</Button>
