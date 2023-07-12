@@ -6,6 +6,8 @@ import { getUsers } from '../../../../services/users';
 import { getEmailingTraces, postEmailingTraces } from '../../../../services/traces';
 import { sendEmail } from '../../../../services/email-sending';
 import { template_1 } from '../../../../services/templates/custom';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 type IsVisible = boolean;
 type IsReady = boolean;
@@ -54,11 +56,6 @@ const Homepage: React.FC = () => {
     fetchEmailingTraces();
   }, []);
 
-  const optionHandler = (option: number) => {
-    setCurrentOption(option)
-    setNextStepActive(true)
-  }
-
   const optionSendingHandler = (option: number) => {
     setCurrentOptionSending(option)
     if (option == 1) {
@@ -104,9 +101,7 @@ const Homepage: React.FC = () => {
       .catch(e => console.error(e))
   };
 
-
-
-  // new alghorithm
+  const EditorComponent = () => <Editor />
   const close = () =>{
     setIsVisible(prev => !prev)
     window.location.reload()
