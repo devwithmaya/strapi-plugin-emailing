@@ -6,7 +6,9 @@ import { getUsers } from '../../../../services/users';
 import { getEmailingTraces, postEmailingTraces } from '../../../../services/traces';
 import { sendEmail } from '../../../../services/email-sending';
 import { template_1 } from '../../../../services/templates/custom';
+import {EmailTemplate} from "../../../../services/templates/body";
 import MDEditor from '@uiw/react-md-editor';
+import showdown from 'showdown'
 
 
 
@@ -25,6 +27,7 @@ type Entries = any;
 type ComposedTemplate = any;
 
 const Homepage: React.FC = () => {
+  const converter = new showdown.Converter();
   const template: any = template_1;
   const [emailingTraces, setEmailingTraces]: any = useState([])
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
@@ -157,8 +160,10 @@ const Homepage: React.FC = () => {
       }
     }
     else {
+      const html_content = converter.makeHtml(content)
+      const html_template = EmailTemplate(html_content)
       for (let i = 0; i < emailsList.length; i++) {
-        sendEmail(emailsList[i], subject, content)
+        sendEmail(emailsList[i], subject, html_template)
           .then(res => {
             postEmailingTraces(emailsList[i], true)
               .then(response => null)
@@ -547,11 +552,10 @@ const Homepage: React.FC = () => {
                   <p>Contenu de l'e-mail</p>
                   <br />
                   <MDEditor
-                    value={value}
-                    onChange={setValue}
+                    value={content}
+                    onChange={setContent}
                     preview="edit"
                   />
-                  <MDEditor.Markdown source={value} style={{ whiteSpace: 'pre-wrap' }} />
                   <br />
                   <br />
                   <Button size="s" onClick={() => customTemplateHandler()} >Sauvegarder</Button>
