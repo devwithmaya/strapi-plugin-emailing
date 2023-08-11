@@ -10,48 +10,36 @@ import {EmailTemplate} from "../../../../services/templates/body";
 import MDEditor from '@uiw/react-md-editor';
 import showdown from 'showdown'
 
-
-
 type IsVisible = boolean;
 type IsReady = boolean;
-type EmailingPlugin = number;
 type IsOnSending = boolean;
 type SendButton = string;
 type Expanded = boolean;
 type CurrentStep = number;
 type NextStepActive = boolean;
-type CurrentOption = any;
 type CurrentOptionSending = any;
 type Email = any;
-type Entries = any;
-type ComposedTemplate = any;
-
+type Item = any;
 const Homepage: React.FC = () => {
   const converter = new showdown.Converter();
   const template: any = template_1;
   const [emailingTraces, setEmailingTraces]: any = useState([])
   const [isVisible, setIsVisible] = useState<IsVisible>(false);
-
   const [compaignOption, setCompaignOption] = useState(null);
   const [nextStepActive, setNextStepActive] = useState<NextStepActive>(false)
   const [newsletterLink, setNewsletterLink] = useState('')
-  const [value, setValue] = React.useState("**Hello world!!!**");
-
   const [isReady, setIsReady] = useState<IsReady>(false);
   const [isOnSending, setIsOnSending] = useState<IsOnSending>(false);
   const [sendButton, setSendButton] = useState<SendButton>('Envoyer maintenant')
   const [expanded, setExpanded] = useState<Expanded>(false)
   const [currentStep, setCurrentStep] = useState<CurrentStep>(1);
-  const [currentOption, setCurrentOption] = useState<CurrentOption>(null);
   const [currentOptionSending, setCurrentOptionSending] = useState<CurrentOptionSending>(null);
   const [currentOptionTemplate, setCurrentOptionTemplate] = useState<CurrentOptionSending>(null);
-
+  const [users, setUsers] = useState<Email>([]);
   const [emails, setEmails] = useState<Email[]>([]);
   const [emailsList, setEmailsList] = useState<Email[]>([]);
-
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
-  const [composedTemplate, setComposedTemplate] = useState<ComposedTemplate>({})
 
   const ROW_COUNT = 6;
   const COL_COUNT = 10;
@@ -83,24 +71,18 @@ const Homepage: React.FC = () => {
       setIsReady(false);
     }
   }
-
   const customTemplateHandler = () => {
     setIsReady(true);
   }
-
-  const stepHandler = (step: number) => {
-    setCurrentStep(step)
-  }
-
   const fetchEmails = async () => {
     getUsers()
       .then((res: any) => {
-        const filtred_emails = res.map((item: any) => item.email)
+        const filtred_emails = res.map((item:Item) => item.email)
         setEmails(filtred_emails)
+        setUsers(res);
       })
       .catch(e => console.error(e))
   };
-
   const fetchEmailingTraces = async () => {
     getEmailingTraces()
       .then((res: any) => {
@@ -108,22 +90,22 @@ const Homepage: React.FC = () => {
       })
       .catch(e => console.error(e))
   };
-
   const close = () =>{
     setIsVisible(prev => !prev)
     window.location.reload()
   }
   const emailingHandler = () =>{
+    const filter_emails = users.filter((item:Item)=> item.notification === true).map((item:any)=> item.email)
+    setEmails(filter_emails)
     setCompaignOption("emailing")
     setNextStepActive(true)
   }
-
-
   const newsletterHandler = () =>{
+    const filter_emails = users.filter((item:Item)=> item.newsletter === true).map((item:any)=> item.email)
+    setEmails(filter_emails)
     setCompaignOption("newsletter")
     setNextStepActive(true)
   }
-
   const compaignHandler = (compaignOption:string) =>{
     switch (compaignOption){
       case "emailing":
@@ -402,7 +384,6 @@ const Homepage: React.FC = () => {
       }
     }
   }
-
   const handleSendEmailCampaign = () => {
     // Logic to send a new email campaign goes here
     // You can use the Strapi API to create and send emails
@@ -592,8 +573,8 @@ const Homepage: React.FC = () => {
         <ModalFooter startActions={<Button onClick={() => close()} variant="tertiary">
           Cancel
         </Button>} endActions={<>
-          <Button disabled={currentStep == 1 ? true : false} variant="secondary" onClick={() => stepHandler(currentStep - 1)}>Étape précédente</Button>
-          <Button disabled={!nextStepActive} variant="secondary" onClick={() => stepHandler(currentStep + 1)}>L'étape suivante</Button>
+          <Button disabled={currentStep == 1 ? true : false} variant="secondary" onClick={() => setCurrentStep(currentStep - 1)}>Étape précédente</Button>
+          <Button disabled={!nextStepActive} variant="secondary" onClick={() => setCurrentStep(currentStep + 1)}>L'étape suivante</Button>
           <Button loading={isOnSending} disabled={!isReady} onClick={() => handleSendEmailCampaign()}>{sendButton}</Button>
         </>} />
       </ModalLayout>}
